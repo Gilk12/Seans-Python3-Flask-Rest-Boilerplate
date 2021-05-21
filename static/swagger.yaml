@@ -1,0 +1,208 @@
+openapi: 3.0.0
+info:
+  title: "Seans-Python3-Flask-Rest-Boilerplate"
+  description: "sean"
+  version: "1.0.0"
+  license:
+    name: "MIT"
+    url: "https://opensource.org/licenses/MIT"
+
+servers:
+  - url: "/"
+
+tags:
+  - name: "Book Request"
+    description: "Example API for requesting and return book requests"
+
+paths:
+  "/request":
+    get:
+      tags:
+        - Book Request
+      summary: Returns bookRequests
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/bookRequests"
+              example:
+                "somebook":
+                  title: "Just Fucking Do It"
+                  email: "some@gmail.com"
+                  timestamp: "1621504109.979792"
+    post:
+      tags:
+        - Book Request
+      summary: Create a new book request system
+      requestBody:
+        description: "Book Request Post Object"
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/bookRequestPostBody"
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/id"
+        '400':
+          description: Failed. Bad post data.
+  "/request/{id}":
+    get:
+      tags:
+        - Book Request
+      summary: "Get book request with given ID"
+      parameters:
+        - name: id
+          in: path
+          description: "ID of the cat that we want to match"
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/bookRequest"
+              example:
+                title: Just Fucking Do It
+                email: some@email.com
+                timestamp: 1621504109.979792
+        '400':
+          description: Failed. Misunderstood Request.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error"
+              example:
+                error: "Misunderstood"
+        '404':
+          description: Failed. Book request not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error"
+              example:
+                error: "Not found"
+    put:
+      summary: edit a book request by ID
+      tags:
+        - Book Request
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: Book Request id
+          schema:
+            "$ref": "#/components/schemas/id"
+      requestBody:
+        description: Book Request Object
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/bookRequest"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/bookRequest"
+              example:
+                title: Just Fucking Do It
+                email: some@email.com
+                timestamp: 1621504109.979792
+        '400':
+          description: Failed. Bad post data.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error"
+              example:
+                error: "Misunderstood"
+        '404':
+          description: Failed. Book request not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error"
+              example:
+                error: "Not found"
+    delete:
+      summary: Delete Book Request by ID
+      tags:
+        - Book Request
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: Book Request Id
+          schema:
+            "$ref": "#/components/schemas/id"
+      responses:
+        '204':
+          description: OK
+        '400':
+          description: Failed. Bad post data.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error"
+              example:
+                error: "Misunderstood"
+        '404':
+          description: Failed. Book request not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error"
+              example:
+                error: "Not found"
+components:
+  schemas:
+    bookRequests:
+      type: object
+      properties:
+        bookRequest:
+          type: object
+          additionalProperties:
+            "$ref": "#/components/schemas/bookRequest"
+    bookRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          format: string
+        email:
+          type: string
+          format: email
+        timestamp:
+          type: string
+          format: number
+    bookRequestPostBody:
+      type: object
+      properties:
+        title:
+          type: string
+          format: string
+        email:
+          type: string
+          format: email
+    id:
+      properties:
+        uuid:
+          type: string
+    error:
+      type: object
+      properties:
+        error:
+          type: string
+          format: string
